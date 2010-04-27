@@ -26,6 +26,7 @@ metabase-relayd - A relay server for Metabase
    --address   - A particular IP address to listen on;
    --port      - The TCP port to listen on;
    --multiple  - Whether to use multiple HTTP clients;
+   --no-relay  - Whether to disable report submissions to the Metabase
 
 =head1 DESCRIPTION
 
@@ -76,6 +77,11 @@ Specify the TCP port for the listening socket to bind to. The default is 0, ie. 
 By default a single L<POE::Component::Client::HTTP> instance is created and used to send
 each report. Enabling this option means that a new instance of L<POE::Component::Client::HTTP> will
 be created for each report submitted.
+
+=item C<--no-relay>
+
+By default recieved reports will be relayed to Metabase. If this option is set,
+they will only be queued locally and may be submitted later.
 
 =back
 
@@ -135,6 +141,13 @@ each report. Enabling this option means that a new instance of L<POE::Component:
 be created for each report submitted.
 
   multiple=1
+
+=item C<no_relay=BOOL>
+
+By default recieved reports will be relayed to Metabase. If this option is set,
+they will only be queued locally and may be submitted later.
+
+  no_relay=1
 
 =back
 

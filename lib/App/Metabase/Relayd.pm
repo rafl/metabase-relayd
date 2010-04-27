@@ -40,7 +40,7 @@ sub _read_config {
   if ( defined $Config->{_} ) {
     my $root = delete $Config->{_};
 	  @config = map { $_, $root->{$_} } grep { exists $root->{$_} }
-		              qw(debug url idfile dbfile address port multiple);
+		              qw(debug url idfile dbfile address port multiple no_relay);
   }
   return @config;
 }
@@ -70,13 +70,14 @@ sub run {
     "dbfile=s"  => \$config{dbfile},
     "idfile=s"	=> \$config{idfile},
     "multiple"	=> \$config{multiple},
+    "no-relay"  => \$config{no_relay},
   ) or pod2usage(2);
 
   _display_version() if $version;
 
   print "Running metabase-relayd with options:\n";
   printf("%-20s %s\n", $_, $config{$_}) 
-	  for grep { defined $config{$_} } qw(debug url dbfile idfile address port multiple);
+	  for grep { defined $config{$_} } qw(debug url dbfile idfile address port multiple no_relay);
 
   my $self = bless \%config, $package;
 
@@ -88,6 +89,7 @@ sub run {
     uri      => $self->{url},
     debug    => $self->{debug},
     multiple => $self->{multiple},
+    no_relay => $self->{no_relay},
   );
 
 
