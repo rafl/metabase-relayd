@@ -61,22 +61,24 @@ sub run {
   my %config = _read_config();
   my $version;
   GetOptions(
-    "help"      => sub { pod2usage(1); },
-    "version"   => sub { $version = 1 },
-    "debug"     => \$config{debug},
-    "address=s" => \$config{address},
-    "port=s"    => \$config{port},
-    "url=s"	    => \$config{url},
-    "dbfile=s"  => \$config{dbfile},
-    "idfile=s"	=> \$config{idfile},
-    "multiple"	=> \$config{multiple},
-    "no-relay"  => \$config{no_relay},
+    "help"       => sub { pod2usage(1); },
+    "version"    => sub { $version = 1 },
+    "debug"      => \$config{debug},
+    "address=s@" => \$config{address},
+    "port=s"     => \$config{port},
+    "url=s"      => \$config{url},
+    "dbfile=s"   => \$config{dbfile},
+    "idfile=s"   => \$config{idfile},
+    "multiple"   => \$config{multiple},
+    "no-relay"   => \$config{no_relay},
   ) or pod2usage(2);
 
   _display_version() if $version;
 
   print "Running metabase-relayd with options:\n";
-  printf("%-20s %s\n", $_, $config{$_}) 
+  printf("%-20s %s\n", $_, ref $config{$_}
+                                ? (join q{, } => @{ $config{$_} })
+                                : $config{$_})
 	  for grep { defined $config{$_} } qw(debug url dbfile idfile address port multiple no_relay);
 
   my $self = bless \%config, $package;
